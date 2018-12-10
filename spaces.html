@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        main,
+        header,
+        footer {
+            position: relative;
+        }
+        main {
+            min-height: 800px;
+            background: linear-gradient(45deg, rgba(0,0,0,1) 0%,rgba(5,5,5,1) 15%,rgba(8,8,28,1) 60%,rgba(10,10,10,1) 100%);
+        }
+        .l-content {
+            position: relative;
+            height: 100%;
+            z-index: 1;
+        }
+        .l-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            display: block;
+            width: 43px;
+            height: 43px;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+        .star > canvas {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0; 
+        }
+    </style>
+</head>
+<body>
+    <header>
+
+    </header>
+    <main>
+        <div class="l-content">
+        </div>
+        <div class="l-bg">
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+        </div>
+
+    </main>
+    <footer>
+
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+
+
+$('document').ready(function() {
+    var rotation = 0, x, y;
+    var image1 = new Image();
+    var image2 = new Image();
+    var image3 = new Image();
+    var image4 = new Image();
+
+    image1.src = "img/star-red.png";
+    image2.src = "img/star-blue.png";
+    image3.src = "img/star-green.png";
+    image4.src = "img/star-orig.png";
+
+    var coef = Math.random();
+    var numImg = randomInteger(1,4);
+    var img = 'image' + numImg;
+
+    screenW = $('.l-bg').innerWidth();
+    screenH = $('.l-bg').innerHeight();
+
+    $(".star").each(function(){
+        $(this).append('<canvas />');
+        var canvas = $(this).find('canvas');
+        var context = $(canvas)[0].getContext("2d");
+
+        var x = Math.round(Math.random() * screenW);
+        var y = Math.round(Math.random() * screenH);
+        $(this).css({'left': x, 'top': y});
+
+        setInterval(function () {
+            rotation += 23;
+            repaint(context, 22, 22);
+        }, 300);
+        
+    });
+
+    function repaint(context, X, Y) {
+        if (context) {
+        coef = (Math.random()+1.5)/2.5;
+        numImg = randomInteger(1,4);
+        img = 'image' + numImg;
+            //context.drawImage(bg, 0, 0);
+            if (typeof X !== 'undefined') x = X - eval(img).width / 2;
+            if (typeof Y !== 'undefined') y = Y - eval(img).height / 2;
+            drawRotated(context);
+        }
+    }
+    function drawRotated(context) {
+        context.save();
+        context.clearRect(0, 0, 100, 100);
+        context.translate( eval(img).width / 2,  eval(img).height / 2);
+        context.rotate(rotation * Math.PI / 180);
+        context.drawImage( eval(img), -coef* eval(img).width / 2, -coef* eval(img).height / 2, coef* eval(img).width, coef* eval(img).height);
+        context.restore();
+    }
+
+   /*
+
+*/
+});
+
+ 
+function randomInteger(min, max) {
+    var rand = min - 0.5 + Math.random() * (max - min + 1)
+    rand = Math.round(rand);
+    return rand;
+}
+</script>
+</body>
+</html>
